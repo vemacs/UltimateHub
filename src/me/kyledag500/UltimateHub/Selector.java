@@ -94,7 +94,8 @@ public class Selector implements Listener{
 		Inventory main = Bukkit.createInventory(null, Integer.parseInt(selector.getConfig().getString("menuSize")), ChatColor.translateAlternateColorCodes('&', selector.getConfig().getString("menuTitle")));
 		for(String i : selector.getConfig().getStringList("items")){
 			String[] type = selector.getConfig().getString(i + ".type").split(":");
-			ItemStack item = new ItemStack(Material.valueOf(type[0].toUpperCase()), selector.getConfig().getInt(i + ".amount"), Short.parseShort(type[1]));
+			int amount = selector.getConfig().getInt(i + ".amount");
+			ItemStack item = new ItemStack(Material.valueOf(type[0].toUpperCase()), amount, Short.parseShort(type[1]));
 			ItemMeta im = item.getItemMeta();
 			im.setDisplayName(ChatColor.translateAlternateColorCodes('&', selector.getConfig().getString(i + ".displayName")));
 	    	ArrayList<String> lore = new ArrayList<String>();
@@ -106,6 +107,7 @@ public class Selector implements Listener{
 	    	if(!selector.getConfig().getString(i + ".glow").equalsIgnoreCase("false")){
 	    		item.addUnsafeEnchantment(glow, 1);
 	    	}
+			item.setAmount(amount == 0 ? 1 : amount);
 	    	main.setItem(Integer.parseInt(selector.getConfig().getString(i + ".slot")), item);
 		}
 		player.openInventory(main);
